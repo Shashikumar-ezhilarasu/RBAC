@@ -1,0 +1,22 @@
+# Root-level gitignore for org-rbac-poc
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+
+# Rails backend
+backend/.bundle/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/log/*
+!backend/log/.keep
+backend/tmp/*
+!backend/tmp/.keep
+backend/tmp/pids/*
+!backend/tmp/pids/.keep
+backend/public/assets
+backend/config/*.key
+backend/storage/*
+!backend/storage/.keep
