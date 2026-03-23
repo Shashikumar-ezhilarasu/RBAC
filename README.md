@@ -1,4 +1,3 @@
-# CircuitVerse GSoC POC — Organization + RBAC
 
 > **Stack:** Ruby on Rails 8.1 (full-stack) · PostgreSQL · Devise · Pundit · ERB + Stimulus/Turbo
 
