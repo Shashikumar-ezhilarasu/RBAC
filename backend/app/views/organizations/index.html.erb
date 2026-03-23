@@ -1,0 +1,64 @@
+<div class="page-header">
+  <h1>Welcome, <%= current_user.name %> 👋</h1>
+  <p>Manage your organizations from here.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+  <%# ── Create Organization ──────────────────────── %>
+  <div class="card">
+    <div class="card-title">➕ Create New Organization</div>
+    <%= form_with model: Organization.new, url: organizations_path, local: false, data: { turbo: false } do |f| %>
+      <% if @organization&.errors&.any? %>
+        <div class="error-list">
+          <ul>
+            <% @organization.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :name, "Organization Name" %>
+        <%= f.text_field :name, placeholder: "e.g. ABC University", id: "org_name_field", autofocus: true %>
+      </div>
+
+      <%= f.submit "Create Organization", class: "btn btn-primary", id: "create_org_btn" %>
+    <% end %>
+  </div>
+
+  <%# ── Your Organizations ────────────────────────── %>
+  <div>
+    <div class="section-header">
+      <span class="section-title">Your Organizations (<%= @memberships.size %>)</span>
+    </div>
+
+    <% if @memberships.empty? %>
+      <div class="empty-state">
+        <div class="empty-icon">🏛️</div>
+        <p>You haven't joined any organizations yet.<br>Create one to get started!</p>
+      </div>
+    <% else %>
+      <div class="org-grid">
+        <% @memberships.each do |membership| %>
+          <%= link_to organization_path(membership.organization), class: "org-card", id: "org_card_#{membership.organization.id}" do %>
+            <div class="org-card-name"><%= membership.organization.name %></div>
+            <div class="org-card-slug">/<%= membership.organization.slug %></div>
+            <div class="org-card-meta">
+              <% if membership.role == "org_admin" %>
+                <span class="badge badge-admin">Org Admin</span>
+              <% else %>
+                <span class="badge badge-instructor">Instructor</span>
+              <% end %>
+              <span style="font-size:0.75rem; color: var(--text-muted)">
+                <%= membership.organization.created_at.strftime("%b %Y") %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

@@ -1,0 +1,99 @@
+<div class="page-header">
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1><%= @organization.name %></h1>
+      <p>Organization details and member roster</p>
+    </div>
+    <%= link_to "← Dashboard", organizations_path, class: "btn btn-outline btn-sm" %>
+  </div>
+</div>
+
+<%# ── Org Metadata ──────────────────────────────── %>
+<div class="card">
+  <div class="org-meta">
+    <div class="org-meta-item">
+      <label>Slug</label>
+      <span>/<%= @organization.slug %></span>
+    </div>
+    <div class="org-meta-item">
+      <label>Created</label>
+      <span><%= @organization.created_at.strftime("%B %d, %Y") %></span>
+    </div>
+    <div class="org-meta-item">
+      <label>Created By</label>
+      <span><%= @organization.creator.name %></span>
+    </div>
+    <div class="org-meta-item">
+      <label>Your Role</label>
+      <% if @current_membership&.role == "org_admin" %>
+        <span class="badge badge-admin">Org Admin</span>
+      <% else %>
+        <span class="badge badge-instructor">Instructor</span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Member Table ──────────────────────────────── %>
+  <div class="section-header">
+    <span class="section-title">Members (<%= @memberships.size %>)</span>
+  </div>
+
+  <% if @memberships.empty? %>
+    <div class="empty-state">
+      <div class="empty-icon">👥</div>
+      <p>No members yet.</p>
+    </div>
+  <% else %>
+    <table class="member-table" id="member-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @memberships.each do |membership| %>
+          <tr id="member_<%= membership.user.id %>">
+            <td><%= membership.user.name %></td>
+            <td style="color: var(--text-muted); font-family: monospace; font-size: 0.83rem;"><%= membership.user.email %></td>
+            <td>
+              <% if membership.role == "org_admin" %>
+                <span class="badge badge-admin">Org Admin</span>
+              <% else %>
+                <span class="badge badge-instructor">Instructor</span>
+              <% end %>
+            </td>
+            <td style="color: var(--text-muted); font-size: 0.82rem;"><%= membership.created_at.strftime("%b %d, %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <%# ── Add Instructor (org_admin ONLY — not rendered for instructors) ── %>
+  <% if @current_membership&.role == "org_admin" %>
+    <div class="add-instructor-section" id="add-instructor-section">
+      <h3>➕ Add Instructor</h3>
+      <%= form_with url: organization_memberships_path(@organization), method: :post, local: false, data: { turbo: false } do |f| %>
+        <div class="form-inline">
+          <div class="form-group">
+            <%= label_tag :email, "User Email", style: "font-size:0.78rem; color: var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em;" %>
+            <%= text_field_tag "membership[email]", nil,
+                placeholder: "instructor@example.com",
+                id: "add_instructor_email",
+                style: "width:100%; padding:0.6rem 0.85rem; background:var(--bg-input); border:1px solid var(--border); border-radius:7px; color:var(--text); font-size:0.9rem; font-family:inherit;" %>
+          </div>
+          <button type="submit" class="btn btn-primary" id="add_instructor_btn" style="margin-top:1.45rem;">
+            Add as Instructor
+          </button>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <%# NOTE: For instructors, the section above is NOT rendered at all (not
+      just hidden with CSS). This is a deliberate security-in-depth choice —
+      even if CSS were disabled, the form would not appear for non-admins. %>
+
+</div>
