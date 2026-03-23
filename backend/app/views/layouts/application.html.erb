@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="CircuitVerse GSoC POC – Organization RBAC system">
+    <title>CircuitVerse Org RBAC</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="<%= authenticated_root_path rescue root_path %>" class="nav-brand">
+          ⚡ CircuitVerse Org
+        </a>
+        <div class="nav-links">
+          <% if user_signed_in? %>
+            <span class="nav-user">👤 <%= current_user.name %></span>
+            <%= link_to "Sign Out", destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-outline" %>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <% if notice %>
+        <div class="flash flash-notice">
+          <span>✅</span> <%= notice %>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="flash flash-alert">
+          <span>⚠️</span> <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

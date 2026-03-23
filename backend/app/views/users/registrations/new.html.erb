@@ -1,0 +1,44 @@
+<div class="auth-page">
+  <div class="auth-card card">
+    <h2>Create Account</h2>
+    <p class="subtitle">Join CircuitVerse Organizations</p>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <% if resource.errors.any? %>
+        <div class="error-list">
+          <ul>
+            <% resource.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :name, "Full Name" %>
+        <%= f.text_field :name, autofocus: true, placeholder: "Alice Smith", id: "user_name" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email, "Email Address" %>
+        <%= f.email_field :email, autocomplete: "email", placeholder: "you@example.com", id: "user_email" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password %>
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: "8+ characters", id: "user_password" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", id: "user_password_confirmation" %>
+      </div>
+
+      <%= f.submit "Create Account", class: "btn btn-primary", style: "width:100%; justify-content:center; padding:0.65rem;", id: "sign_up_btn" %>
+    <% end %>
+
+    <div class="auth-footer">
+      Already have an account? <%= link_to "Sign In", new_user_session_path %>
+    </div>
+  </div>
+</div>

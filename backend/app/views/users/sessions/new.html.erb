@@ -1,0 +1,29 @@
+<div class="auth-page">
+  <div class="auth-card card">
+    <h2>Sign In</h2>
+    <p class="subtitle">Welcome back to CircuitVerse Org</p>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "you@example.com", id: "user_email" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password %>
+        <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••", id: "user_password" %>
+      </div>
+
+      <div class="form-group" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;">
+        <%= f.check_box :remember_me, id: "user_remember_me" %>
+        <%= f.label :remember_me, style: "margin:0; font-size:0.85rem; color:var(--text-muted); text-transform:none; letter-spacing:0;" %>
+      </div>
+
+      <%= f.submit "Sign In", class: "btn btn-primary", style: "width:100%; justify-content:center; padding:0.65rem;", id: "sign_in_btn" %>
+    <% end %>
+
+    <div class="auth-footer">
+      Don't have an account? <%= link_to "Sign Up", new_user_registration_path %>
+    </div>
+  </div>
+</div>
