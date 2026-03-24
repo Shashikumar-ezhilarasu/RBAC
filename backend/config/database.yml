@@ -22,10 +22,14 @@ default: &default
 
 development:
   <<: *default
-  database: org_rbac_poc_development
-  # Use DATABASE_URL env var to override (see .env.example)
-  # E.g.: DATABASE_URL=postgres://username:password@localhost/org_rbac_poc_development
+  database: <%= ENV.fetch("DB_NAME") { "rbac-poc" } %>
+  username: <%= ENV.fetch("DB_USER") { "postgres" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "300812" } %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+  # Alternatively, use DATABASE_URL if set:
   url: <%= ENV["DATABASE_URL"] if ENV["DATABASE_URL"].present? %>
+
+
 
 
 # Warning: The database defined as "test" will be erased and
