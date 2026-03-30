@@ -1,10 +1,18 @@
 <div class="page-header">
-  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+  <div class="flex-between">
     <div>
       <h1><%= @organization.name %></h1>
       <p>Organization details and member roster</p>
     </div>
-    <%= link_to "← Dashboard", organizations_path, class: "btn btn-outline btn-sm" %>
+    <div class="flex-between" style="gap: 1rem;">
+      <%= link_to "← Dashboard", organizations_path, class: "btn btn-outline btn-sm" %>
+      <% if @current_membership&.role == "org_admin" %>
+        <%= button_to "🗑️ Delete Organization", organization_path(@organization),
+                    method: :delete,
+                    data: { turbo_confirm: "Are you sure you want to delete this organization? This action is permanent." },
+                    class: "btn btn-danger btn-sm" %>
+      <% end %>
+    </div>
   </div>
 </div>
 
@@ -51,13 +59,16 @@
           <th>Email</th>
           <th>Role</th>
           <th>Joined</th>
+          <% if @current_membership&.role == "org_admin" %>
+            <th>Actions</th>
+          <% end %>
         </tr>
       </thead>
       <tbody>
         <% @memberships.each do |membership| %>
           <tr id="member_<%= membership.user.id %>">
             <td><%= membership.user.name %></td>
-            <td style="color: var(--text-muted); font-family: monospace; font-size: 0.83rem;"><%= membership.user.email %></td>
+            <td style="color: var(--text-muted); font-size: 0.9rem;"><%= membership.user.email %></td>
             <td>
               <% if membership.role == "org_admin" %>
                 <span class="badge badge-admin">Org Admin</span>
@@ -66,6 +77,20 @@
               <% end %>
             </td>
             <td style="color: var(--text-muted); font-size: 0.82rem;"><%= membership.created_at.strftime("%b %d, %Y") %></td>
+            
+            <% if @current_membership&.role == "org_admin" %>
+              <td>
+                <% if membership.user_id != current_user.id %>
+                  <%= button_to "Remove", organization_membership_path(@organization, membership),
+                                method: :delete,
+                                data: { turbo_confirm: "Remove #{membership.user.name} from this organization?" },
+                                class: "btn btn-danger btn-sm",
+                                style: "padding: 0.2rem 0.5rem; font-size: 0.75rem;" %>
+                <% else %>
+                  <span class="text-muted" style="font-size: 0.75rem; font-style: italic;">You</span>
+                <% end %>
+              </td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>
@@ -79,13 +104,18 @@
       <%= form_with url: organization_memberships_path(@organization), method: :post, local: false, data: { turbo: false } do |f| %>
         <div class="form-inline">
           <div class="form-group">
-            <%= label_tag :email, "User Email", style: "font-size:0.78rem; color: var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em;" %>
+            <%= label_tag :name, "User Name" %>
+            <%= text_field_tag "membership[name]", nil,
+                placeholder: "e.g. John Doe",
+                id: "add_instructor_name" %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :email, "User Email" %>
             <%= text_field_tag "membership[email]", nil,
                 placeholder: "instructor@example.com",
-                id: "add_instructor_email",
-                style: "width:100%; padding:0.6rem 0.85rem; background:var(--bg-input); border:1px solid var(--border); border-radius:7px; color:var(--text); font-size:0.9rem; font-family:inherit;" %>
+                id: "add_instructor_email" %>
           </div>
-          <button type="submit" class="btn btn-primary" id="add_instructor_btn" style="margin-top:1.45rem;">
+          <button type="submit" class="btn btn-primary" id="add_instructor_btn">
             Add as Instructor
           </button>
         </div>
