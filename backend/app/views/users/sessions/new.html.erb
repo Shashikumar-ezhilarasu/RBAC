@@ -14,13 +14,31 @@
         <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••", id: "user_password" %>
       </div>
 
-      <div class="form-group" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;">
+      <div class="form-check">
         <%= f.check_box :remember_me, id: "user_remember_me" %>
-        <%= f.label :remember_me, style: "margin:0; font-size:0.85rem; color:var(--text-muted); text-transform:none; letter-spacing:0;" %>
+        <%= f.label :remember_me %>
       </div>
 
-      <%= f.submit "Sign In", class: "btn btn-primary", style: "width:100%; justify-content:center; padding:0.65rem;", id: "sign_in_btn" %>
+      <%= f.submit "Sign In", class: "btn btn-primary btn-block", id: "sign_in_btn" %>
     <% end %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem; text-align: left; background: #f0fdf4; padding: 1.25rem; border: 1px solid #dcfce7; border-radius: 12px;">
+      <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #166534; margin-bottom: 0.75rem;">
+        ⚡ Quick Access (Demo Roles)
+      </h3>
+      <div style="font-size: 0.875rem; line-height: 1.6; color: #111827;">
+        <div style="margin-bottom: 0.75rem;">
+          <span class="badge badge-admin" style="margin-bottom: 0.25rem;">Admin Access</span>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0 0 0.5rem 0;">Full control (Create Org, Add Instructors, Remove members)</p>
+          <code style="background: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #e5e7eb;">alice@test.com</code> / <code>password123</code>
+        </div>
+        <div>
+          <span class="badge badge-instructor" style="margin-bottom: 0.25rem;">Instructor Access</span>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0 0 0.5rem 0;">View-only access (Cannot manage members or orgs)</p>
+          <code style="background: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #e5e7eb;">bob@test.com</code> / <code>password123</code>
+        </div>
+      </div>
+    </div>
 
     <div class="auth-footer">
       Don't have an account? <%= link_to "Sign Up", new_user_registration_path %>
