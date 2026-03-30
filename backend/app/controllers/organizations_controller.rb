@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_organization, only: [:show]
+  before_action :set_organization, only: [:show, :destroy]
 
   # GET /organizations
   # Lists all organizations the current user belongs to, with their role.
@@ -35,6 +35,15 @@ class OrganizationsController < ApplicationController
     @memberships = current_user.organization_memberships.includes(:organization)
     flash.now[:alert] = e.message
     render :index, status: :unprocessable_entity
+  end
+
+  # DELETE /organizations/:id
+  # Only org_admin can delete the organization.
+  def destroy
+    authorize @organization
+    name = @organization.name
+    @organization.destroy!
+    redirect_to root_path, notice: "Organization \"#{name}\" was successfully deleted."
   end
 
   private

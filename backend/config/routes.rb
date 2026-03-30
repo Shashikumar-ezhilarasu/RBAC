@@ -3,8 +3,8 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  resources :organizations, only: [:index, :show, :create] do
-    resources :memberships, only: [:create], module: :organizations
+  resources :organizations, only: [:index, :show, :create, :destroy] do
+    resources :memberships, only: [:create, :destroy], module: :organizations
   end
 
   # Authenticated root → dashboard; unauthenticated → login

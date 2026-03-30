@@ -16,6 +16,16 @@ class OrganizationPolicy < ApplicationPolicy
     org_admin?
   end
 
+  # Only org_admin can remove members (instructors) from an organization.
+  def remove_member?
+    org_admin?
+  end
+
+  # Only org_admin can delete the entire organization.
+  def destroy?
+    org_admin?
+  end
+
   private
 
   # Memoized lookup of the current user's membership in this organization.
